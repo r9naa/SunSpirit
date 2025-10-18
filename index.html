@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SunSpirit Pro - AI-Powered CO₂ Conversion Monitoring</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sun-gold': '#FFD700',
+                        'sun-orange': '#FF8C00',
+                        'sun-red': '#FF4500',
+                        'eco-green': '#32CD32',
+                        'sky-blue': '#87CEEB',
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite alternate',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            '0%': { 'box-shadow': '0 0 20px rgba(255, 215, 0, 0.3)' },
+                            '100%': { 'box-shadow': '0 0 30px rgba(255, 215, 0, 0.6)' }
+                        },
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+       
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+       
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            min-height: 100vh;
+        }
+       
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+       
+        .gradient-text {
+            background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+       
+        .hero-glow {
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+        }
+       
+        .sensor-glow {
+            animation: pulse-glow 2s ease-in-out infinite alternate;
+        }
+       
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+       
+        /* Accessibility Styles */
+        .high-contrast {
+            background: #000 !important;
+            color: #fff !important;
+        }
+       
+        .high-contrast .glass-effect {
+            background: rgba(0, 0, 0, 0.9) !important;
+            color: #fff !important;
+            border: 2px solid #fff !important;
+        }
+       
+        .high-contrast .text-gray-400 {
+            color: #ccc !important;
+        }
+       
+        .high-contrast .gradient-text {
+            background: none !important;
+            -webkit-text-fill-color: #fff !important;
+            color: #fff !important;
+        }
+       
+        .text-large {
+            font-size: 1.25rem !important;
+        }
+       
+        .text-xlarge {
+            font-size: 1.5rem !important;
+        }
+       
+        .dyslexia-friendly {
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif !important;
+            letter-spacing: 0.05em;
+            line-height: 1.6;
+        }
+       
+        .grayscale {
+            filter: grayscale(100%);
+        }
+       
+        .accessibility-panel {
+            transition: transform 0.3s ease;
+        }
+       
+        .accessibility-panel.hidden {
+            transform: translateX(100%);
+        }
+       
+        /* Focus styles for keyboard navigation */
+        button:focus, a:focus, input:focus, select:focus {
+            outline: 3px solid #FF8C00 !important;
+            outline-offset: 2px;
+        }
+       
+        /* Reduced motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+       
+        /* Color blind simulation styles */
+        .protanopia {
+            filter: url(#protanopia);
+        }
+       
+        .deuteranopia {
+            filter: url(#deuteranopia);
+        }
+       
+        .tritanopia {
+            filter: url(#tritanopia);
+        }
+       
+        /* Screen reader only class */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen">
+    <!-- Accessibility Panel -->
+    <div id="accessibilityPanel" class="accessibility-panel fixed top-1/2 right-0 transform -translate-y-1/2 z-50 bg-gray-800 rounded-l-xl p-4 shadow-lg hidden">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold text-sun-gold" id="accessibilityPanelTitle">Accessibility Tools</h3>
+            <button id="closeAccessibility" class="text-white hover:text-sun-gold" aria-label="Close accessibility panel">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="space-y-4">
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" id="highContrast" class="w-4 h-4">
+                <label for="highContrast" class="text-sm">High Contrast</label>
+            </div>
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" id="largeText" class="w-4 h-4">
+                <label for="largeText" class="text-sm">Large Text</label>
+            </div>
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" id="dyslexiaFont" class="w-4 h-4">
+                <label for="dyslexiaFont" class="text-sm">Dyslexia-Friendly Font</label>
+            </div>
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" id="grayscaleMode" class="w-4 h-4">
+                <label for="grayscaleMode" class="text-sm">Grayscale</label>
+            </div>
+            <div class="pt-2 border-t border-gray-700">
+                <label for="fontSize" class="block text-sm mb-1">Font Size</label>
+                <select id="fontSize" class="w-full bg-gray-700 text-white rounded p-1 text-sm">
+                    <option value="normal">Normal</option>
+                    <option value="large">Large</option>
+                    <option value="xlarge">Extra Large</option>
+                </select>
+            </div>
+            <div>
+                <label for="colorBlind" class="block text-sm mb-1">Color Vision</label>
+                <select id="colorBlind" class="w-full bg-gray-700 text-white rounded p-1 text-sm">
+                    <option value="normal">Normal</option>
+                    <option value="protanopia">Protanopia</option>
+                    <option value="deuteranopia">Deuteranopia</option>
+                    <option value="tritanopia">Tritanopia</option>
+                </select>
+            </div>
+            <button id="resetAccessibility" class="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 rounded text-sm mt-2">
+                Reset Settings
+            </button>
+        </div>
+    </div>
+
+    <!-- Accessibility Toggle Button -->
+    <button id="toggleAccessibility"
+            class="fixed top-1/2 right-0 transform -translate-y-1/2 z-40 bg-sun-orange text-white p-3 rounded-l-lg shadow-lg hover:bg-sun-red transition-colors"
+            aria-label="Open accessibility panel"
+            aria-expanded="false"
+            aria-controls="accessibilityPanel">
+        <i class="fas fa-universal-access text-xl"></i>
+    </button>
+
+    <!-- Color Blindness Filters (SVG) -->
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="hidden">
+        <defs>
+            <filter id="protanopia">
+                <feColorMatrix type="matrix" values="0.567, 0.433, 0, 0, 0 0.558, 0.442, 0, 0, 0 0, 0.242, 0.758, 0, 0 0, 0, 0, 1, 0" />
+            </filter>
+            <filter id="deuteranopia">
+                <feColorMatrix type="matrix" values="0.625, 0.375, 0, 0, 0 0.7, 0.3, 0, 0, 0 0, 0.3, 0.7, 0, 0 0, 0, 0, 1, 0" />
+            </filter>
+            <filter id="tritanopia">
+                <feColorMatrix type="matrix" values="0.95, 0.05, 0, 0, 0 0, 0.433, 0.567, 0, 0 0, 0.475, 0.525, 0, 0 0, 0, 0, 1, 0" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Skip to main content link for screen readers -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-sun-orange text-white p-2 rounded z-50">Skip to main content</a>
+
+    <!-- Navigation -->
+    <nav class="glass-effect fixed w-full z-40" aria-label="Main navigation">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-sun-gold to-sun-orange rounded-xl flex items-center justify-center hero-glow">
+                        <span class="text-white font-bold text-lg">SSP</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold gradient-text">SunSpirit Pro</h1>
+                        <p class="text-xs text-gray-400">Solar-Powered Technology</p>
+                    </div>
+                </div>
+               
+                <div class="hidden md:flex space-x-6">
+                    <a href="#dashboard" class="nav-link text-sun-gold font-semibold border-b-2 border-sun-gold pb-1">Dashboard</a>
+                    <a href="#sensors" class="nav-link text-gray-300 hover:text-sun-gold transition-colors">Sensors</a>
+                    <a href="#tickets" class="nav-link text-gray-300 hover:text-sun-gold transition-colors">Tickets</a>
+                </div>
+               
+                <div class="flex items-center space-x-4">
+                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center" aria-label="System status: online">
+                        <span class="text-white text-sm font-bold">✓</span>
+                    </div>
+                    <span class="text-sm hidden md:block">System Online</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="main-content" class="pt-32 pb-20 px-4">
+        <div class="container mx-auto text-center">
+            <div class="floating inline-block mb-6">
+                <div class="bg-gradient-to-r from-sun-gold to-sun-orange rounded-full p-4 hero-glow">
+                    <span class="text-2xl" aria-hidden="true">☀️</span>
+                </div>
+            </div>
+           
+            <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                <span class="gradient-text">SunSpirit Pro</span>
+            </h1>
+           
+            <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                Solar-Powered CO₂ Conversion Monitoring Platform<br>
+                <span class="text-sun-gold">Harnessing Sunlight to Transform Emissions into Sustainable Fuel</span>
+            </p>
+           
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button class="bg-sun-orange hover:bg-sun-red text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 hero-glow">
+                    Launch Dashboard
+                </button>
+                <button class="glass-effect hover:bg-sun-orange/20 text-white px-8 py-4 rounded-xl font-semibold text-lg border border-sun-gold/30 transition-all">
+                    View Technology
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="py-20 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 gradient-text">Live System Dashboard</h2>
+           
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <div class="glass-effect rounded-2xl p-6 border border-purple-500/30">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400">System Efficiency</p>
+                            <p class="text-3xl font-bold text-purple-400" data-stat="efficiency">92.1%</p>
+                            <p class="text-purple-400 text-sm">+1.2% today</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center">
+                            <span class="text-2xl" aria-hidden="true">📊</span>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="glass-effect rounded-2xl p-6 border border-yellow-500/30">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400">Active Sensors</p>
+                            <p class="text-3xl font-bold text-yellow-400">24/24</p>
+                            <p class="text-yellow-400 text-sm">All systems optimal</p>
+                        </div>
+                        <div class="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center">
+                            <span class="text-2xl" aria-hidden="true">🔍</span>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="glass-effect rounded-2xl p-6 border border-green-500/30">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400">Energy Consumption</p>
+                            <p class="text-3xl font-bold text-green-400" data-stat="energy">538 mW</p>
+                            <p class="text-green-400 text-sm">-3.2% today</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                            <span class="text-2xl" aria-hidden="true">⚡</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Visualization -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="glass-effect rounded-2xl p-6 border border-sky-blue/30">
+                    <h3 class="text-xl font-semibold mb-4">CO₂ Conversion Process</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-400">Input CO₂</span>
+                                <span class="text-sky-blue">415 ppm</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-3">
+                                <div class="bg-gradient-to-r from-sky-blue to-sun-orange h-3 rounded-full w-[83%]"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-400">Catalyst Efficiency</span>
+                                <span class="text-eco-green">94%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-3">
+                                <div class="bg-gradient-to-r from-eco-green to-sky-blue h-3 rounded-full w-[94%]"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-400">Output CO₂</span>
+                                <span class="text-blue-400">337 ppm</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-3">
+                                <div class="bg-gradient-to-r from-blue-400 to-purple-500 h-3 rounded-full w-[75%]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-effect rounded-2xl p-6 border border-purple-500/30">
+                    <h3 class="text-xl font-semibold mb-4">System Health Monitor</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-300">Catalyst Efficiency</span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-24 bg-gray-700 rounded-full h-2">
+                                    <div class="bg-eco-green h-2 rounded-full w-[95%]"></div>
+                                </div>
+                                <span class="text-eco-green text-sm">95%</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-300">Temperature Control</span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-24 bg-gray-700 rounded-full h-2">
+                                    <div class="bg-sky-blue h-2 rounded-full w-[88%]"></div>
+                                </div>
+                                <span class="text-sky-blue text-sm">88%</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-300">Pressure Regulation</span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-24 bg-gray-700 rounded-full h-2">
+                                    <div class="bg-sun-gold h-2 rounded-full w-[76%]"></div>
+                                </div>
+                                <span class="text-sun-gold text-sm">76%</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-300">Solar Input</span>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-24 bg-gray-700 rounded-full h-2">
+                                    <div class="bg-sun-orange h-2 rounded-full w-[92%]"></div>
+                                </div>
+                                <span class="text-sun-orange text-sm">92%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sensors Section -->
+    <section id="statistics" class="py-20 px-4 bg-gradient-to-b from-gray-900/50 to-gray-900/20">
+        <div class="container mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 gradient-text">Historical Performance Statistics</h2>
+            <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">NDIR Sensor Network Performance Data 2023 - Present</p>
+           
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="glass-effect rounded-2xl p-6 border border-cyan-500/30">
+                    <h3 class="text-xl font-semibold mb-4 text-cyan-400">2023 Performance</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">Avg. CO₂ Reduction</span>
+                            <span class="text-green-400">78.2%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">System Uptime</span>
+                            <span class="text-blue-400">96.4%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">Energy Efficiency</span>
+                            <span class="text-yellow-400">84.7%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">Maintenance Events</span>
+                            <span class="text-red-400">12</span>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="glass-effect rounded-2xl p-6 border border-purple-500/30">
+                    <h3 class="text-xl font-semibold mb-4 text-purple-400">2024 Performance</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">Avg. CO₂ Reduction</span>
+                            <span class="text-green-400">85.6%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">System Uptime</span>
+                            <span class="text-blue-400">98.1%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">Energy Efficiency</span>
+                            <span class="text-yellow-400">89.3%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">Maintenance Events</span>
+                            <span class="text-red-400">8</span>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="glass-effect rounded-2xl p-6 border border-green-500/30">
+                    <h3 class="text-xl font-semibold mb-4 text-green-400">Jan 2025 - Present</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">Avg. CO₂ Reduction</span>
+                            <span class="text-green-400">92.1%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">System Uptime</span>
+                            <span class="text-blue-400">99.3%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">Energy Efficiency</span>
+                            <span class="text-yellow-400">93.5%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">Maintenance Events</span>
+                            <span class="text-red-400">2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="glass-effect rounded-2xl p-6 border border-yellow-500/30">
+                <h3 class="text-xl font-semibold mb-6 text-yellow-400">NDIR Sensor Network Performance Trends</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-semibold mb-4 text-gray-300">CO₂ Conversion Efficiency (%)</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <span class="w-24 text-sm text-gray-400">2023</span>
+                                <div class="flex-1 bg-gray-700 rounded-full h-4">
+                                    <div class="bg-cyan-500 h-4 rounded-full" style="width: 78%"></div>
+                                </div>
+                                <span class="ml-2 text-sm text-cyan-400">78%</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-24 text-sm text-gray-400">2024</span>
+                                <div class="flex-1 bg-gray-700 rounded-full h-4">
+                                    <div class="bg-purple-500 h-4 rounded-full" style="width: 86%"></div>
+                                </div>
+                                <span class="ml-2 text-sm text-purple-400">86%</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-24 text-sm text-gray-400">2025</span>
+                                <div class="flex-1 bg-gray-700 rounded-full h-4">
+                                    <div class="bg-green-500 h-4 rounded-full" style="width: 92%"></div>
+                                </div>
+                                <span class="ml-2 text-sm text-green-400">92%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-4 text-gray-300">System Reliability (%)</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <span class="w-24 text-sm text-gray-400">2023</span>
+                                <div class="flex-1 bg-gray-700 rounded-full h-4">
+                                    <div class="bg-cyan-500 h-4 rounded-full" style="width: 96%"></div>
+                                </div>
+                                <span class="ml-2 text-sm text-cyan-400">96%</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-24 text-sm text-gray-400">2024</span>
+                                <div class="flex-1 bg-gray-700 rounded-full h-4">
+                                    <div class="bg-purple-500 h-4 rounded-full" style="width: 98%"></div>
+                                </div>
+                                <span class="ml-2 text-sm text-purple-400">98%</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-24 text-sm text-gray-400">2025</span>
+                                <div class="flex-1 bg-gray-700 rounded-full h-4">
+                                    <div class="bg-green-500 h-4 rounded-full" style="width: 99%"></div>
+                                </div>
+                                <span class="ml-2 text-sm text-green-400">99%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Tickets Section -->
+    <section id="tickets" class="py-20 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 gradient-text">Support Tickets</h2>
+            <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">Manage system alerts, maintenance requests, and support tickets</p>
+           
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="glass-effect rounded-2xl p-6 border border-sky-blue/30">
+                    <h3 class="text-xl font-semibold mb-4 text-sky-blue">Open Tickets</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-gray-800/50 rounded-lg">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-medium">Catalyst Efficiency Drop</span>
+                                <span class="text-xs bg-yellow-500 text-white px-2 py-1 rounded">Medium</span>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-2">Catalyst chamber #3 showing 5% efficiency drop</p>
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Ticket #TSK-4821</span>
+                                <span>2 days ago</span>
+                            </div>
+                        </div>
+                       
+                        <div class="p-4 bg-gray-800/50 rounded-lg">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-medium">Solar Panel Cleaning</span>
+                                <span class="text-xs bg-green-500 text-white px-2 py-1 rounded">Low</span>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-2">Dust accumulation on panel array B reducing efficiency</p>
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Ticket #TSK-4819</span>
+                                <span>5 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full mt-4 bg-sky-blue hover:bg-blue-600 text-white py-2 rounded-lg text-sm transition-colors">
+                        Create New Ticket
+                    </button>
+                </div>
+               
+                <div class="glass-effect rounded-2xl p-6 border border-eco-green/30">
+                    <h3 class="text-xl font-semibold mb-4 text-eco-green">In Progress</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-gray-800/50 rounded-lg">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-medium">Pressure Sensor Calibration</span>
+                                <span class="text-xs bg-blue-500 text-white px-2 py-1 rounded">High</span>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-2">Calibrating pressure sensors in conversion chamber</p>
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Ticket #TSK-4815</span>
+                                <span>In progress</span>
+                            </div>
+                        </div>
+                       
+                        <div class="p-4 bg-gray-800/50 rounded-lg">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-medium">Software Update</span>
+                                <span class="text-xs bg-purple-500 text-white px-2 py-1 rounded">Medium</span>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-2">Installing v2.3.1 with improved AI algorithms</p>
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Ticket #TSK-4812</span>
+                                <span>In progress</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full mt-4 bg-eco-green hover:bg-green-600 text-white py-2 rounded-lg text-sm transition-colors">
+                        View All Tickets
+                    </button>
+                </div>
+               
+                <div class="glass-effect rounded-2xl p-6 border border-sun-orange/30">
+                    <h3 class="text-xl font-semibold mb-4 text-sun-orange">Resolved Tickets</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-gray-800/50 rounded-lg">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-medium">Temperature Fluctuation</span>
+                                <span class="text-xs bg-gray-500 text-white px-2 py-1 rounded">Resolved</span>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-2">Fixed thermostat in heating element #2</p>
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Ticket #TSK-4805</span>
+                                <span>1 week ago</span>
+                            </div>
+                        </div>
+                       
+                        <div class="p-4 bg-gray-800/50 rounded-lg">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-medium">Data Sync Issue</span>
+                                <span class="text-xs bg-gray-500 text-white px-2 py-1 rounded">Resolved</span>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-2">Resolved cloud synchronization problem</p>
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Ticket #TSK-4801</span>
+                                <span>2 weeks ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full mt-4 bg-sun-orange hover:bg-orange-600 text-white py-2 rounded-lg text-sm transition-colors">
+                        Analytics Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solar Technology Section -->
+    <section class="py-20 px-4 bg-gradient-to-r from-sun-orange/10 to-sun-gold/10">
+        <div class="container mx-auto text-center">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-6xl mb-6" aria-hidden="true">☀️</div>
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 gradient-text">Solar-Powered Technology</h2>
+                <p class="text-xl text-gray-300 mb-8">
+                    Powered by advanced solar collection and photocatalytic CO₂ conversion technology.
+                    Transforming industrial emissions into sustainable fuel using sunlight-powered artificial photosynthesis.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                    <div class="glass-effect rounded-2xl p-6">
+                        <div class="text-3xl mb-4" aria-hidden="true">🌿</div>
+                        <h3 class="font-semibold text-eco-green mb-2">Solar Photosynthesis</h3>
+                        <p class="text-gray-400 text-sm">Sunlight-powered CO₂ to fuel conversion using advanced catalysts</p>
+                    </div>
+                    <div class="glass-effect rounded-2xl p-6">
+                        <div class="text-3xl mb-4" aria-hidden="true">🔍</div>
+                        <h3 class="font-semibold text-sky-blue mb-2">NDIR Sensor Array</h3>
+                        <p class="text-gray-400 text-sm">Real-time CO₂ monitoring with solar-powered precision</p>
+                    </div>
+                    <div class="glass-effect rounded-2xl p-6">
+                        <div class="text-3xl mb-4" aria-hidden="true">🤖</div>
+                        <h3 class="font-semibold text-sun-gold mb-2">AI Optimization</h3>
+                        <p class="text-gray-400 text-sm">Machine learning for predictive maintenance and efficiency</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass-effect border-t border-gray-700/50 py-12 px-4">
+        <div class="container mx-auto text-center">
+            <div class="flex items-center justify-center space-x-3 mb-6">
+                <div class="w-8 h-8 bg-gradient-to-r from-sun-gold to-sun-orange rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold text-sm">SSP</span>
+                </div>
+                <span class="text-white font-bold text-xl">SunSpirit Pro</span>
+            </div>
+            <p class="text-gray-400 mb-6 max-w-2xl mx-auto">
+                Advanced solar-powered CO₂ conversion monitoring platform. Transforming industrial emissions into sustainable energy solutions using sunlight.
+            </p>
+            <div class="flex flex-wrap justify-center gap-6 text-gray-400 text-sm">
+                <a href="#dashboard" class="nav-link hover:text-sun-gold transition-colors">Dashboard</a>
+                <a href="#sensors" class="nav-link hover:text-sun-gold transition-colors">Sensors</a>
+                <a href="#tickets" class="nav-link hover:text-sun-gold transition-colors">Tickets</a>
+                <a href="#" class="hover:text-sun-gold transition-colors">Documentation</a>
+                <a href="#" class="hover:text-sun-gold transition-colors">Contact</a>
+            </div>
+            <div class="mt-6 pt-6 border-t border-gray-700/30">
+                <p class="text-gray-500 text-sm">© 2024 SunSpirit Pro. Solar-powered technology. All systems operational.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Live Data Simulation Script -->
+    <script>
+        // Simulate live data updates
+        function updateLiveData() {
+            // Update sensor values randomly
+            const sensors = ['NDIR-001', 'NDIR-002', 'NDIR-003', 'NDIR-004'];
+            sensors.forEach(sensor => {
+                const element = document.querySelector(`[data-sensor="${sensor}"]`);
+                if (element) {
+                    const currentValue = parseInt(element.textContent);
+                    const change = Math.random() * 10 - 5; // Random change between -5 and +5
+                    const newValue = Math.max(0, currentValue + change);
+                    element.textContent = newValue.toFixed(1) + ' ppm';
+                }
+            });
+
+            // Update main stats with slight variations
+            const efficiency = document.querySelector('[data-stat="efficiency"]');
+            const energyConsumption = document.querySelector('[data-stat="energy"]');
+
+            if (efficiency) {
+                const current = parseFloat(efficiency.textContent);
+                const newValue = Math.min(100, Math.max(0, current + (Math.random() * 0.4 - 0.2)));
+                efficiency.textContent = newValue.toFixed(1) + '%';
+            }
+
+            if (energyConsumption) {
+                const current = parseFloat(energyConsumption.textContent);
+                const newValue = Math.max(0, current + (Math.random() * 0.6 - 0.3));
+                energyConsumption.textContent = newValue.toFixed(1) + ' mW';
+            }
+        }
+
+        // Accessibility Functions
+        function initializeAccessibility() {
+            const panel = document.getElementById('accessibilityPanel');
+            const toggleBtn = document.getElementById('toggleAccessibility');
+            const closeBtn = document.getElementById('closeAccessibility');
+            const highContrast = document.getElementById('highContrast');
+            const largeText = document.getElementById('largeText');
+            const dyslexiaFont = document.getElementById('dyslexiaFont');
+            const grayscaleMode = document.getElementById('grayscaleMode');
+            const fontSize = document.getElementById('fontSize');
+            const colorBlind = document.getElementById('colorBlind');
+            const resetBtn = document.getElementById('resetAccessibility');
+           
+            let panelVisible = false;
+           
+            // Toggle panel visibility
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    panelVisible = !panelVisible;
+                    if (panelVisible) {
+                        panel.classList.remove('hidden');
+                        toggleBtn.setAttribute('aria-expanded', 'true');
+                        toggleBtn.setAttribute('aria-label', 'Close accessibility panel');
+                        // Focus on first element in panel when opened
+                        setTimeout(() => {
+                            highContrast.focus();
+                        }, 100);
+                    } else {
+                        panel.classList.add('hidden');
+                        toggleBtn.setAttribute('aria-expanded', 'false');
+                        toggleBtn.setAttribute('aria-label', 'Open accessibility panel');
+                        // Return focus to toggle button when closed
+                        toggleBtn.focus();
+                    }
+                });
+            }
+           
+            // Close panel with X button
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    panelVisible = false;
+                    panel.classList.add('hidden');
+                    toggleBtn.setAttribute('aria-expanded', 'false');
+                    toggleBtn.setAttribute('aria-label', 'Open accessibility panel');
+                    // Return focus to toggle button when closed
+                    toggleBtn.focus();
+                });
+            }
+           
+            // Close panel when clicking outside
+            document.addEventListener('click', (e) => {
+                if (panelVisible &&
+                    !panel.contains(e.target) &&
+                    !toggleBtn.contains(e.target)) {
+                    panelVisible = false;
+                    panel.classList.add('hidden');
+                    toggleBtn.setAttribute('aria-expanded', 'false');
+                    toggleBtn.setAttribute('aria-label', 'Open accessibility panel');
+                }
+            });
+           
+            // Close panel with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && panelVisible) {
+                    panelVisible = false;
+                    panel.classList.add('hidden');
+                    toggleBtn.setAttribute('aria-expanded', 'false');
+                    toggleBtn.setAttribute('aria-label', 'Open accessibility panel');
+                    toggleBtn.focus();
+                }
+            });
+           
+            // High contrast mode
+            highContrast.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    document.body.classList.add('high-contrast');
+                } else {
+                    document.body.classList.remove('high-contrast');
+                }
+            });
+           
+            // Large text mode
+            largeText.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    document.body.classList.add('text-large');
+                } else {
+                    document.body.classList.remove('text-large');
+                }
+            });
+           
+            // Dyslexia-friendly font
+            dyslexiaFont.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    document.body.classList.add('dyslexia-friendly');
+                } else {
+                    document.body.classList.remove('dyslexia-friendly');
+                }
+            });
+           
+            // Grayscale mode
+            grayscaleMode.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    document.body.classList.add('grayscale');
+                } else {
+                    document.body.classList.remove('grayscale');
+                }
+            });
+           
+            // Font size selector
+            fontSize.addEventListener('change', (e) => {
+                document.body.classList.remove('text-large', 'text-xlarge');
+                if (e.target.value === 'large') {
+                    document.body.classList.add('text-large');
+                } else if (e.target.value === 'xlarge') {
+                    document.body.classList.add('text-xlarge');
+                }
+            });
+           
+            // Color blind modes
+            colorBlind.addEventListener('change', (e) => {
+                document.body.classList.remove('protanopia', 'deuteranopia', 'tritanopia');
+                if (e.target.value !== 'normal') {
+                    document.body.classList.add(e.target.value);
+                }
+            });
+           
+            // Reset all settings
+            resetBtn.addEventListener('click', () => {
+                highContrast.checked = false;
+                largeText.checked = false;
+                dyslexiaFont.checked = false;
+                grayscaleMode.checked = false;
+                fontSize.value = 'normal';
+                colorBlind.value = 'normal';
+               
+                document.body.className = 'text-white min-h-screen';
+            });
+        }
+
+        // Initialize data attributes for live updates
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add data attributes to dynamic elements
+            const sensorElements = document.querySelectorAll('.sensor-value');
+            sensorElements.forEach((element, index) => {
+                element.setAttribute('data-sensor', `NDIR-00${index + 1}`);
+            });
+
+            // Start live data simulation
+            setInterval(updateLiveData, 3000);
+
+            // Add smooth scrolling for navigation
+            document.querySelectorAll('.nav-link').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        // Update active nav link
+                        document.querySelectorAll('.nav-link').forEach(link => {
+                            link.classList.remove('text-sun-gold', 'border-b-2', 'border-sun-gold');
+                            link.classList.add('text-gray-300');
+                        });
+                        this.classList.add('text-sun-gold', 'border-b-2', 'border-sun-gold');
+                        this.classList.remove('text-gray-300');
+                       
+                        // Scroll to section
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+           
+            // Initialize accessibility features
+            initializeAccessibility();
+        });
+    </script>
+</body>
+</html>
