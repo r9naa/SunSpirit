@@ -164,9 +164,222 @@
             white-space: nowrap;
             border: 0;
         }
+       
+        /* Technology page specific styles */
+        .tech-hero {
+            background: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+       
+        .tech-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+       
+        .tech-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.2);
+        }
+       
+        .process-step {
+            position: relative;
+        }
+       
+        .process-step:not(:last-child):after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(to right, #FFD700, #FF8C00);
+        }
+       
+        @media (max-width: 768px) {
+            .process-step:not(:last-child):after {
+                display: none;
+            }
+        }
+       
+        .animated-icon {
+            animation: spin 10s linear infinite;
+        }
+       
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+       
+        /* Ticket priority color coding */
+        .priority-critical {
+            background-color: rgba(239, 68, 68, 0.2);
+            border-left: 4px solid #ef4444;
+        }
+       
+        .priority-high {
+            background-color: rgba(249, 115, 22, 0.2);
+            border-left: 4px solid #f97316;
+        }
+       
+        .priority-medium {
+            background-color: rgba(245, 158, 11, 0.2);
+            border-left: 4px solid #f59e0b;
+        }
+       
+        .priority-low {
+            background-color: rgba(34, 197, 94, 0.2);
+            border-left: 4px solid #22c55e;
+        }
+       
+        /* Task list styling */
+        .task-list {
+            min-height: 200px;
+        }
+       
+        .task-item {
+            transition: all 0.2s ease;
+        }
+       
+        .task-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+       
+        .delete-btn {
+            opacity: 0.6;
+            transition: opacity 0.2s ease;
+        }
+       
+        .delete-btn:hover {
+            opacity: 1;
+        }
+       
+        .placeholder-img {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-style: italic;
+        }
     </style>
 </head>
 <body class="text-white min-h-screen">
+    <!-- Technology Page (hidden by default) -->
+    <div id="technologyPage" class="fixed inset-0 z-50 bg-gray-900 overflow-y-auto hidden">
+        <div class="container mx-auto px-4 py-8">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-12">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-sun-gold to-sun-orange rounded-xl flex items-center justify-center hero-glow">
+                        <span class="text-white font-bold text-lg">SSP</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold gradient-text">SunSpirit Pro</h1>
+                        <p class="text-xs text-gray-400">Solar-Powered Technology</p>
+                    </div>
+                </div>
+                <button id="closeTechnology" class="bg-sun-orange hover:bg-sun-red text-white px-6 py-2 rounded-lg transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Dashboard
+                </button>
+            </div>
+           
+            <!-- Hero Section -->
+            <div class="tech-hero rounded-2xl p-12 mb-16 text-center">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 gradient-text">Our Technology</h1>
+                <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
+                    Advanced solar-powered CO₂ conversion systems harnessing artificial photosynthesis to transform emissions into sustainable fuel.
+                </p>
+            </div>
+           
+            <!-- Technology Overview -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+                <div class="glass-effect rounded-2xl p-8 tech-card">
+                    <div class="text-5xl mb-6 text-center animated-icon">☀️</div>
+                    <h2 class="text-3xl font-bold mb-4 text-center gradient-text">Chemical Reaction Process</h2>
+                    <p class="text-gray-300 mb-6">
+                        Our technology utilizes a two-step chemical reaction process. In the first process, artificial photosynthesis occurs where CO₂, O₂, and sunlight are taken in, and oxygen is released. In the second process, the carbon from the first reaction is carried into the second chamber where it reacts with titanium dioxide, resulting in the creation of CH₄ (methane).
+                    </p>
+                    <div class="mb-4">
+                        <img
+                        src='assets/nasa_patent_picture.png'
+                        alt = "NASA patent diagram"
+                        class="w-full"
+                        style="height: 12rem; object-fit: cover; border-radius: 0.75rem;"
+                        />
+                    </div>
+                    <div class="flex justify-center">
+                        <div class="bg-sun-orange/20 rounded-lg p-4 text-center">
+                            <p class="text-2xl font-bold text-sun-gold">92%</p>
+                            <p class="text-sm text-gray-300">Reaction Efficiency</p>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="glass-effect rounded-2xl p-8 tech-card">
+                    <div class="text-5xl mb-6 text-center">🔍</div>
+                    <h2 class="text-3xl font-bold mb-4 text-center gradient-text">NDIR Non-Dispersive Infrared Sensors</h2>
+                    <p class="text-gray-300 mb-6">
+                        NDIR (Non-Dispersive Infrared) sensors are critical for our product as they quantify CO₂ through the use of infrared rays. These sensors provide precise, real-time measurements of CO₂ concentrations, enabling accurate monitoring and optimization of our conversion processes.
+                    </p>
+
+                    <img
+                        src='assets/diagram.png'
+                        alt="NDIR CO2 sensor module"
+                        class="w-full h-48 object-cover rounded-xl mb-4"
+                        loading="lazy"
+                        />
+
+                    <div class="flex justify-center">
+                        <div class="bg-eco-green/20 rounded-lg p-4 text-center">
+                            <p class="text-2xl font-bold text-eco-green">99.8%</p>
+                            <p class="text-sm text-gray-300">Measurement Accuracy</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <!-- Process Flow -->
+            <div class="glass-effect rounded-2xl p-8 mb-16">
+                <h2 class="text-3xl font-bold mb-8 text-center gradient-text">Conversion Process</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="process-step text-center p-6">
+                        <div class="w-16 h-16 bg-sky-blue/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl">🌫️</span>
+                        </div>
+                        <h3 class="font-bold text-sky-blue mb-2">CO₂ Capture</h3>
+                        <p class="text-sm text-gray-400">Direct air capture technology isolates CO₂ molecules</p>
+                    </div>
+                   
+                    <div class="process-step text-center p-6">
+                        <div class="w-16 h-16 bg-sun-orange/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl">☀️</span>
+                        </div>
+                        <h3 class="font-bold text-sun-orange mb-2">Solar Activation</h3>
+                        <p class="text-sm text-gray-400">Sunlight energizes proprietary photocatalytic materials</p>
+                    </div>
+                   
+                    <div class="process-step text-center p-6">
+                        <div class="w-16 h-16 bg-eco-green/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl">⚗️</span>
+                        </div>
+                        <h3 class="font-bold text-eco-green mb-2">Catalytic Conversion</h3>
+                        <p class="text-sm text-gray-400">CO₂ transforms into hydrocarbons using our advanced catalyst</p>
+                    </div>
+                   
+                    <div class="text-center p-6">
+                        <div class="w-16 h-16 bg-sun-gold/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl">⛽</span>
+                        </div>
+                        <h3 class="font-bold text-sun-gold mb-2">Fuel Output</h3>
+                        <p class="text-sm text-gray-400">Sustainable fuel ready for industrial and transportation use</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Accessibility Panel -->
     <div id="accessibilityPanel" class="accessibility-panel fixed top-1/2 right-0 transform -translate-y-1/2 z-50 bg-gray-800 rounded-l-xl p-4 shadow-lg hidden">
         <div class="flex justify-between items-center mb-4">
@@ -214,7 +427,6 @@
             </button>
         </div>
     </div>
-
     <!-- Accessibility Toggle Button -->
     <button id="toggleAccessibility"
             class="fixed top-1/2 right-0 transform -translate-y-1/2 z-40 bg-sun-orange text-white p-3 rounded-l-lg shadow-lg hover:bg-sun-red transition-colors"
@@ -223,7 +435,6 @@
             aria-controls="accessibilityPanel">
         <i class="fas fa-universal-access text-xl"></i>
     </button>
-
     <!-- Color Blindness Filters (SVG) -->
     <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="hidden">
         <defs>
@@ -238,10 +449,8 @@
             </filter>
         </defs>
     </svg>
-
     <!-- Skip to main content link for screen readers -->
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-sun-orange text-white p-2 rounded z-50">Skip to main content</a>
-
     <!-- Navigation -->
     <nav class="glass-effect fixed w-full z-40" aria-label="Main navigation">
         <div class="container mx-auto px-4 py-4">
@@ -258,7 +467,7 @@
                
                 <div class="hidden md:flex space-x-6">
                     <a href="#dashboard" class="nav-link text-sun-gold font-semibold border-b-2 border-sun-gold pb-1">Dashboard</a>
-                    <a href="#sensors" class="nav-link text-gray-300 hover:text-sun-gold transition-colors">Sensors</a>
+                    <a href="#statistics" class="nav-link text-gray-300 hover:text-sun-gold transition-colors">Sensors</a>
                     <a href="#tickets" class="nav-link text-gray-300 hover:text-sun-gold transition-colors">Tickets</a>
                 </div>
                
@@ -271,7 +480,6 @@
             </div>
         </div>
     </nav>
-
     <!-- Hero Section -->
     <section id="main-content" class="pt-32 pb-20 px-4">
         <div class="container mx-auto text-center">
@@ -291,16 +499,12 @@
             </p>
            
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <button class="bg-sun-orange hover:bg-sun-red text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 hero-glow">
-                    Launch Dashboard
-                </button>
-                <button class="glass-effect hover:bg-sun-orange/20 text-white px-8 py-4 rounded-xl font-semibold text-lg border border-sun-gold/30 transition-all">
+                <button id="viewTechnology" class="glass-effect hover:bg-sun-orange/20 text-white px-8 py-4 rounded-xl font-semibold text-lg border border-sun-gold/30 transition-all transform hover:scale-105">
                     View Technology
                 </button>
             </div>
         </div>
     </section>
-
     <!-- Dashboard Section -->
     <section id="dashboard" class="py-20 px-4">
         <div class="container mx-auto">
@@ -347,7 +551,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Charts and Visualization -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div class="glass-effect rounded-2xl p-6 border border-sky-blue/30">
@@ -382,7 +585,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="glass-effect rounded-2xl p-6 border border-purple-500/30">
                     <h3 class="text-xl font-semibold mb-4">System Health Monitor</h3>
                     <div class="space-y-4">
@@ -427,8 +629,7 @@
             </div>
         </div>
     </section>
-
-    <!-- Sensors Section -->
+   <!-- Sensors Section -->
     <section id="statistics" class="py-20 px-4 bg-gradient-to-b from-gray-900/50 to-gray-900/20">
         <div class="container mx-auto">
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 gradient-text">Historical Performance Statistics</h2>
@@ -562,7 +763,6 @@
         </div>
     </section>
 
-
     <!-- Tickets Section -->
     <section id="tickets" class="py-20 px-4">
         <div class="container mx-auto">
@@ -570,105 +770,80 @@
             <p class="text-gray-400 text-center mb-12 max-w-2xl mx-auto">Manage system alerts, maintenance requests, and support tickets</p>
            
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- To-Do List Section -->
                 <div class="glass-effect rounded-2xl p-6 border border-sky-blue/30">
                     <h3 class="text-xl font-semibold mb-4 text-sky-blue">Open Tickets</h3>
-                    <div class="space-y-4">
-                        <div class="p-4 bg-gray-800/50 rounded-lg">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="font-medium">Catalyst Efficiency Drop</span>
-                                <span class="text-xs bg-yellow-500 text-white px-2 py-1 rounded">Medium</span>
-                            </div>
-                            <p class="text-gray-400 text-sm mb-2">Catalyst chamber #3 showing 5% efficiency drop</p>
-                            <div class="flex justify-between text-xs text-gray-500">
-                                <span>Ticket #TSK-4821</span>
-                                <span>2 days ago</span>
-                            </div>
-                        </div>
-                       
-                        <div class="p-4 bg-gray-800/50 rounded-lg">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="font-medium">Solar Panel Cleaning</span>
-                                <span class="text-xs bg-green-500 text-white px-2 py-1 rounded">Low</span>
-                            </div>
-                            <p class="text-gray-400 text-sm mb-2">Dust accumulation on panel array B reducing efficiency</p>
-                            <div class="flex justify-between text-xs text-gray-500">
-                                <span>Ticket #TSK-4819</span>
-                                <span>5 days ago</span>
-                            </div>
-                        </div>
+                    <div id="open-tickets" class="task-list space-y-4">
+                        <!-- Tickets will be dynamically added here -->
                     </div>
-                    <button class="w-full mt-4 bg-sky-blue hover:bg-blue-600 text-white py-2 rounded-lg text-sm transition-colors">
+                    <button id="createTicket" class="w-full mt-4 bg-sky-blue hover:bg-blue-600 text-white py-2 rounded-lg text-sm transition-colors">
                         Create New Ticket
                     </button>
                 </div>
                
+                <!-- In Progress Section -->
                 <div class="glass-effect rounded-2xl p-6 border border-eco-green/30">
                     <h3 class="text-xl font-semibold mb-4 text-eco-green">In Progress</h3>
-                    <div class="space-y-4">
-                        <div class="p-4 bg-gray-800/50 rounded-lg">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="font-medium">Pressure Sensor Calibration</span>
-                                <span class="text-xs bg-blue-500 text-white px-2 py-1 rounded">High</span>
-                            </div>
-                            <p class="text-gray-400 text-sm mb-2">Calibrating pressure sensors in conversion chamber</p>
-                            <div class="flex justify-between text-xs text-gray-500">
-                                <span>Ticket #TSK-4815</span>
-                                <span>In progress</span>
-                            </div>
-                        </div>
-                       
-                        <div class="p-4 bg-gray-800/50 rounded-lg">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="font-medium">Software Update</span>
-                                <span class="text-xs bg-purple-500 text-white px-2 py-1 rounded">Medium</span>
-                            </div>
-                            <p class="text-gray-400 text-sm mb-2">Installing v2.3.1 with improved AI algorithms</p>
-                            <div class="flex justify-between text-xs text-gray-500">
-                                <span>Ticket #TSK-4812</span>
-                                <span>In progress</span>
-                            </div>
-                        </div>
+                    <div id="in-progress-tickets" class="task-list space-y-4">
+                        <!-- Tickets will be dynamically added here -->
                     </div>
-                    <button class="w-full mt-4 bg-eco-green hover:bg-green-600 text-white py-2 rounded-lg text-sm transition-colors">
+                    <button id="viewAllTickets" class="w-full mt-4 bg-eco-green hover:bg-green-600 text-white py-2 rounded-lg text-sm transition-colors">
                         View All Tickets
                     </button>
                 </div>
                
+                <!-- Resolved Section with Analytics -->
                 <div class="glass-effect rounded-2xl p-6 border border-sun-orange/30">
                     <h3 class="text-xl font-semibold mb-4 text-sun-orange">Resolved Tickets</h3>
-                    <div class="space-y-4">
-                        <div class="p-4 bg-gray-800/50 rounded-lg">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="font-medium">Temperature Fluctuation</span>
-                                <span class="text-xs bg-gray-500 text-white px-2 py-1 rounded">Resolved</span>
+                    <div id="resolved-tickets" class="task-list space-y-4 mb-4">
+                        <!-- Tickets will be dynamically added here -->
+                    </div>
+                   
+                    <!-- Analytics Summary -->
+                    <div class="mt-6 pt-4 border-t border-gray-700">
+                        <h4 class="font-semibold mb-3 text-sun-orange">Analytics Summary</h4>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div class="bg-gray-800/50 p-2 rounded">
+                                <p class="text-gray-400">Resolved Today</p>
+                                <p class="text-xl font-bold text-sun-orange" id="resolved-today">0</p>
                             </div>
-                            <p class="text-gray-400 text-sm mb-2">Fixed thermostat in heating element #2</p>
-                            <div class="flex justify-between text-xs text-gray-500">
-                                <span>Ticket #TSK-4805</span>
-                                <span>1 week ago</span>
+                            <div class="bg-gray-800/50 p-2 rounded">
+                                <p class="text-gray-400">Avg. Resolution Time</p>
+                                <p class="text-xl font-bold text-sun-orange" id="avg-resolution-time">0h</p>
                             </div>
-                        </div>
-                       
-                        <div class="p-4 bg-gray-800/50 rounded-lg">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="font-medium">Data Sync Issue</span>
-                                <span class="text-xs bg-gray-500 text-white px-2 py-1 rounded">Resolved</span>
+                            <div class="bg-gray-800/50 p-2 rounded">
+                                <p class="text-gray-400">Open Tickets</p>
+                                <p class="text-xl font-bold text-sky-blue" id="open-count">0</p>
                             </div>
-                            <p class="text-gray-400 text-sm mb-2">Resolved cloud synchronization problem</p>
-                            <div class="flex justify-between text-xs text-gray-500">
-                                <span>Ticket #TSK-4801</span>
-                                <span>2 weeks ago</span>
+                            <div class="bg-gray-800/50 p-2 rounded">
+                                <p class="text-gray-400">In Progress</p>
+                                <p class="text-xl font-bold text-eco-green" id="in-progress-count">0</p>
                             </div>
                         </div>
                     </div>
-                    <button class="w-full mt-4 bg-sun-orange hover:bg-orange-600 text-white py-2 rounded-lg text-sm transition-colors">
+                   
+                    <button id="analyticsReport" class="w-full mt-4 bg-sun-orange hover:bg-orange-600 text-white py-2 rounded-lg text-sm transition-colors">
                         Analytics Report
                     </button>
                 </div>
             </div>
+           
+            <!-- Ticket Details Modal -->
+            <div id="ticketModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden">
+                <div class="glass-effect rounded-2xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold gradient-text" id="modalTitle">Ticket Details</h3>
+                        <button id="closeModal" class="text-gray-400 hover:text-white text-xl">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="modalContent">
+                        <!-- Dynamic content will be inserted here -->
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
-
     <!-- Solar Technology Section -->
     <section class="py-20 px-4 bg-gradient-to-r from-sun-orange/10 to-sun-gold/10">
         <div class="container mx-auto text-center">
@@ -699,7 +874,6 @@
             </div>
         </div>
     </section>
-
     <!-- Footer -->
     <footer class="glass-effect border-t border-gray-700/50 py-12 px-4">
         <div class="container mx-auto text-center">
@@ -714,19 +888,237 @@
             </p>
             <div class="flex flex-wrap justify-center gap-6 text-gray-400 text-sm">
                 <a href="#dashboard" class="nav-link hover:text-sun-gold transition-colors">Dashboard</a>
-                <a href="#sensors" class="nav-link hover:text-sun-gold transition-colors">Sensors</a>
+                <a href="#statistics" class="nav-link hover:text-sun-gold transition-colors">Sensors</a>
                 <a href="#tickets" class="nav-link hover:text-sun-gold transition-colors">Tickets</a>
                 <a href="#" class="hover:text-sun-gold transition-colors">Documentation</a>
                 <a href="#" class="hover:text-sun-gold transition-colors">Contact</a>
             </div>
             <div class="mt-6 pt-6 border-t border-gray-700/30">
-                <p class="text-gray-500 text-sm">© 2024 SunSpirit Pro. Solar-powered technology. All systems operational.</p>
+                <p class="text-gray-500 text-sm">© 2025 SunSpirit Pro. Solar-powered technology</p>
             </div>
         </div>
     </footer>
-
     <!-- Live Data Simulation Script -->
     <script>
+        // Ticket data structure
+        let tickets = [];
+       
+        // Initialize tickets from localStorage or create default tickets
+        function initializeTickets() {
+            const savedTickets = localStorage.getItem('sunspirit-tickets');
+            if (savedTickets) {
+                tickets = JSON.parse(savedTickets);
+            } else {
+                // Create default tickets
+                tickets = [
+                    {
+                        id: 'TSK-4821',
+                        title: 'Catalyst Efficiency Drop',
+                        description: 'Catalyst chamber #3 showing 5% efficiency drop compared to baseline measurements.',
+                        priority: 'medium',
+                        status: 'open',
+                        created: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+                        dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days from now
+                        assignedTo: null
+                    },
+                    {
+                        id: 'TSK-4819',
+                        title: 'Solar Panel Cleaning',
+                        description: 'Dust accumulation on panel array B reducing efficiency by approximately 3%.',
+                        priority: 'low',
+                        status: 'open',
+                        created: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago
+                        dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
+                        assignedTo: null
+                    },
+                    {
+                        id: 'TSK-4815',
+                        title: 'Pressure Sensor Calibration',
+                        description: 'Calibrating pressure sensors in conversion chamber to maintain accurate readings.',
+                        priority: 'high',
+                        status: 'in-progress',
+                        created: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 1 week ago
+                        dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days from now
+                        assignedTo: 'You'
+                    },
+                    {
+                        id: 'TSK-4812',
+                        title: 'Software Update',
+                        description: 'Installing v2.3.1 with improved AI algorithms for predictive maintenance.',
+                        priority: 'medium',
+                        status: 'in-progress',
+                        created: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 1 week ago
+                        dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days from now
+                        assignedTo: 'You'
+                    },
+                    {
+                        id: 'TSK-4805',
+                        title: 'Temperature Fluctuation',
+                        description: 'Fixed thermostat in heating element #2 that was causing temperature fluctuations.',
+                        priority: 'medium',
+                        status: 'resolved',
+                        created: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), // 2 weeks ago
+                        resolved: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 1 week ago
+                        assignedTo: 'You'
+                    },
+                    {
+                        id: 'TSK-4801',
+                        title: 'Data Sync Issue',
+                        description: 'Resolved cloud synchronization problem causing data discrepancies.',
+                        priority: 'low',
+                        status: 'resolved',
+                        created: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString(), // 3 weeks ago
+                        resolved: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(), // 2 weeks ago
+                        assignedTo: 'You'
+                    }
+                ];
+                saveTickets();
+            }
+           
+            renderTickets();
+            updateAnalytics();
+        }
+       
+        // Save tickets to localStorage
+        function saveTickets() {
+            localStorage.setItem('sunspirit-tickets', JSON.stringify(tickets));
+        }
+       
+        // Render tickets in their respective sections
+        function renderTickets() {
+            const openTicketsContainer = document.getElementById('open-tickets');
+            const inProgressContainer = document.getElementById('in-progress-tickets');
+            const resolvedContainer = document.getElementById('resolved-tickets');
+           
+            // Clear containers
+            openTicketsContainer.innerHTML = '';
+            inProgressContainer.innerHTML = '';
+            resolvedContainer.innerHTML = '';
+           
+            // Sort tickets by due date (soonest first)
+            tickets.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+           
+            // Render each ticket
+            tickets.forEach(ticket => {
+                const ticketElement = createTicketElement(ticket);
+               
+                if (ticket.status === 'open') {
+                    openTicketsContainer.appendChild(ticketElement);
+                } else if (ticket.status === 'in-progress') {
+                    inProgressContainer.appendChild(ticketElement);
+                } else if (ticket.status === 'resolved') {
+                    resolvedContainer.appendChild(ticketElement);
+                }
+            });
+           
+            // Update counts
+            document.getElementById('open-count').textContent = tickets.filter(t => t.status === 'open').length;
+            document.getElementById('in-progress-count').textContent = tickets.filter(t => t.status === 'in-progress').length;
+        }
+       
+        // Create a ticket element
+        function createTicketElement(ticket) {
+            const ticketDiv = document.createElement('div');
+            ticketDiv.className = `p-4 bg-gray-800/50 rounded-lg task-item priority-${ticket.priority}`;
+            ticketDiv.setAttribute('data-ticket-id', ticket.id);
+           
+            // Format dates
+            const createdDate = new Date(ticket.created).toLocaleDateString();
+            const dueDate = new Date(ticket.dueDate).toLocaleDateString();
+            const daysUntilDue = Math.ceil((new Date(ticket.dueDate) - new Date()) / (1000 * 60 * 60 * 24));
+           
+            // Priority badge
+            const priorityLabels = {
+                'critical': 'Critical',
+                'high': 'High',
+                'medium': 'Medium',
+                'low': 'Low'
+            };
+           
+            const priorityColors = {
+                'critical': 'bg-red-500',
+                'high': 'bg-orange-500',
+                'medium': 'bg-yellow-500',
+                'low': 'bg-green-500'
+            };
+           
+            ticketDiv.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <span class="font-medium">${ticket.title}</span>
+                    <span class="text-xs ${priorityColors[ticket.priority]} text-white px-2 py-1 rounded">${priorityLabels[ticket.priority]}</span>
+                </div>
+                <p class="text-gray-400 text-sm mb-2">${ticket.description}</p>
+                <div class="flex justify-between text-xs text-gray-500 mb-3">
+                    <span>${ticket.id}</span>
+                    <span>Due: ${dueDate} (${daysUntilDue > 0 ? `${daysUntilDue} days` : 'Overdue'})</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <div class="flex space-x-2">
+                        ${ticket.status === 'open' ? `
+                            <button class="ticket-action bg-sky-blue hover:bg-blue-600 text-white text-xs px-3 py-1 rounded transition-colors" data-ticket="${ticket.id}" data-action="assign">
+                                Assign to Me
+                            </button>
+                        ` : ''}
+                        ${ticket.status === 'in-progress' ? `
+                            <button class="ticket-action bg-eco-green hover:bg-green-600 text-white text-xs px-3 py-1 rounded transition-colors" data-ticket="${ticket.id}" data-action="resolve">
+                                Mark Resolved
+                            </button>
+                        ` : ''}
+                        ${ticket.status === 'resolved' ? `
+                            <button class="ticket-action bg-sun-orange hover:bg-orange-600 text-white text-xs px-3 py-1 rounded transition-colors" data-ticket="${ticket.id}" data-action="reopen">
+                                Reopen Ticket
+                            </button>
+                        ` : ''}
+                        <button class="ticket-action bg-gray-600 hover:bg-gray-500 text-white text-xs px-3 py-1 rounded transition-colors" data-ticket="${ticket.id}" data-action="details">
+                            View Details
+                        </button>
+                    </div>
+                    <button class="delete-btn text-red-500 hover:text-red-400 text-xs" data-ticket="${ticket.id}" data-action="delete" aria-label="Delete ticket">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+           
+            return ticketDiv;
+        }
+       
+        // Update analytics
+        function updateAnalytics() {
+            const resolvedToday = tickets.filter(t => {
+                if (t.status !== 'resolved' || !t.resolved) return false;
+                const resolvedDate = new Date(t.resolved);
+                const today = new Date();
+                return resolvedDate.toDateString() === today.toDateString();
+            }).length;
+           
+            // Calculate average resolution time
+            const resolvedTickets = tickets.filter(t => t.status === 'resolved' && t.resolved);
+            let totalResolutionTime = 0;
+           
+            resolvedTickets.forEach(ticket => {
+                const created = new Date(ticket.created);
+                const resolved = new Date(ticket.resolved);
+                totalResolutionTime += (resolved - created) / (1000 * 60 * 60); // Convert to hours
+            });
+           
+            const avgResolutionTime = resolvedTickets.length > 0
+                ? Math.round(totalResolutionTime / resolvedTickets.length)
+                : 0;
+           
+            document.getElementById('resolved-today').textContent = resolvedToday;
+            document.getElementById('avg-resolution-time').textContent = `${avgResolutionTime}h`;
+        }
+       
+        // Generate a unique ticket ID
+        function generateTicketId() {
+            const prefix = 'TSK-';
+            let id;
+            do {
+                id = prefix + Math.floor(1000 + Math.random() * 9000);
+            } while (tickets.some(ticket => ticket.id === id));
+            return id;
+        }
+       
         // Simulate live data updates
         function updateLiveData() {
             // Update sensor values randomly
@@ -734,30 +1126,249 @@
             sensors.forEach(sensor => {
                 const element = document.querySelector(`[data-sensor="${sensor}"]`);
                 if (element) {
-                    const currentValue = parseInt(element.textContent);
+                    const currentValue = parseFloat(element.textContent);
                     const change = Math.random() * 10 - 5; // Random change between -5 and +5
                     const newValue = Math.max(0, currentValue + change);
-                    element.textContent = newValue.toFixed(1) + ' ppm';
+                    element.textContent = newValue.toFixed(1) + (sensor === 'NDIR-001' ? '°C' : sensor === 'NDIR-002' ? ' ppm' : sensor === 'NDIR-003' ? ' W/m²' : ' kW');
                 }
             });
-
             // Update main stats with slight variations
             const efficiency = document.querySelector('[data-stat="efficiency"]');
             const energyConsumption = document.querySelector('[data-stat="energy"]');
-
             if (efficiency) {
                 const current = parseFloat(efficiency.textContent);
                 const newValue = Math.min(100, Math.max(0, current + (Math.random() * 0.4 - 0.2)));
                 efficiency.textContent = newValue.toFixed(1) + '%';
             }
-
             if (energyConsumption) {
                 const current = parseFloat(energyConsumption.textContent);
                 const newValue = Math.max(0, current + (Math.random() * 0.6 - 0.3));
                 energyConsumption.textContent = newValue.toFixed(1) + ' mW';
             }
         }
-
+       
+        // Technology Page Functions
+        function showTechnologyPage() {
+            document.getElementById('technologyPage').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+       
+        function hideTechnologyPage() {
+            document.getElementById('technologyPage').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+       
+        // Ticket System Functions
+        function showTicketModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalContent').innerHTML = content;
+            document.getElementById('ticketModal').classList.remove('hidden');
+        }
+       
+        function hideTicketModal() {
+            document.getElementById('ticketModal').classList.add('hidden');
+        }
+       
+        function handleTicketAction(ticketId, action) {
+            const ticket = tickets.find(t => t.id === ticketId);
+            if (!ticket) return;
+           
+            let title = '';
+            let content = '';
+           
+            switch(action) {
+                case 'assign':
+                    title = `Assign Ticket ${ticketId}`;
+                    content = `
+                        <div class="space-y-4">
+                            <p>You are about to assign ticket <strong>${ticketId}</strong> to yourself.</p>
+                            <div class="flex space-x-2 mt-4">
+                                <button class="bg-sky-blue hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors" onclick="assignTicket('${ticketId}')">
+                                    Confirm Assignment
+                                </button>
+                                <button class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded transition-colors" onclick="hideTicketModal()">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'resolve':
+                    title = `Resolve Ticket ${ticketId}`;
+                    content = `
+                        <div class="space-y-4">
+                            <p>You are about to mark ticket <strong>${ticketId}</strong> as resolved.</p>
+                            <div class="mt-4">
+                                <label for="resolutionNotes" class="block text-sm font-medium mb-2">Resolution Notes</label>
+                                <textarea id="resolutionNotes" class="w-full bg-gray-700 text-white rounded p-2" rows="4" placeholder="Add notes about how this issue was resolved..."></textarea>
+                            </div>
+                            <div class="flex space-x-2 mt-4">
+                                <button class="bg-eco-green hover:bg-green-600 text-white px-4 py-2 rounded transition-colors" onclick="resolveTicket('${ticketId}')">
+                                    Mark Resolved
+                                </button>
+                                <button class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded transition-colors" onclick="hideTicketModal()">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'reopen':
+                    title = `Reopen Ticket ${ticketId}`;
+                    content = `
+                        <div class="space-y-4">
+                            <p>You are about to reopen ticket <strong>${ticketId}</strong>.</p>
+                            <div class="mt-4">
+                                <label for="reopenReason" class="block text-sm font-medium mb-2">Reason for Reopening</label>
+                                <textarea id="reopenReason" class="w-full bg-gray-700 text-white rounded p-2" rows="4" placeholder="Explain why this ticket needs to be reopened..."></textarea>
+                            </div>
+                            <div class="flex space-x-2 mt-4">
+                                <button class="bg-sun-orange hover:bg-orange-600 text-white px-4 py-2 rounded transition-colors" onclick="reopenTicket('${ticketId}')">
+                                    Reopen Ticket
+                                </button>
+                                <button class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded transition-colors" onclick="hideTicketModal()">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'details':
+                    title = `Ticket Details: ${ticketId}`;
+                    content = `
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-gray-400 text-sm">Status</p>
+                                    <p class="font-medium">${ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1)}</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Priority</p>
+                                    <p class="font-medium">${ticket.priority.charAt(0).toUpperCase() + ticket.priority.slice(1)}</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Created</p>
+                                    <p class="font-medium">${new Date(ticket.created).toLocaleDateString()}</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Due Date</p>
+                                    <p class="font-medium">${new Date(ticket.dueDate).toLocaleDateString()}</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Assigned To</p>
+                                    <p class="font-medium">${ticket.assignedTo || 'Unassigned'}</p>
+                                </div>
+                                ${ticket.resolved ? `
+                                <div>
+                                    <p class="text-gray-400 text-sm">Resolved</p>
+                                    <p class="font-medium">${new Date(ticket.resolved).toLocaleDateString()}</p>
+                                </div>
+                                ` : ''}
+                            </div>
+                            <div>
+                                <p class="text-gray-400 text-sm">Description</p>
+                                <p class="mt-1">${ticket.description}</p>
+                            </div>
+                            <div class="flex space-x-2 mt-6">
+                                <button class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded transition-colors" onclick="hideTicketModal()">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'delete':
+                    title = `Delete Ticket ${ticketId}`;
+                    content = `
+                        <div class="space-y-4">
+                            <p>Are you sure you want to delete ticket <strong>${ticketId}</strong>? This action cannot be undone.</p>
+                            <div class="flex space-x-2 mt-4">
+                                <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors" onclick="deleteTicket('${ticketId}')">
+                                    Delete Ticket
+                                </button>
+                                <button class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded transition-colors" onclick="hideTicketModal()">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+           
+            showTicketModal(title, content);
+        }
+       
+        // Ticket action functions
+        function assignTicket(ticketId) {
+            const ticket = tickets.find(t => t.id === ticketId);
+            if (ticket) {
+                ticket.assignedTo = 'You';
+                ticket.status = 'in-progress';
+                saveTickets();
+                renderTickets();
+                hideTicketModal();
+            }
+        }
+       
+        function resolveTicket(ticketId) {
+            const ticket = tickets.find(t => t.id === ticketId);
+            if (ticket) {
+                ticket.status = 'resolved';
+                ticket.resolved = new Date().toISOString();
+                saveTickets();
+                renderTickets();
+                updateAnalytics();
+                hideTicketModal();
+            }
+        }
+       
+        function reopenTicket(ticketId) {
+            const ticket = tickets.find(t => t.id === ticketId);
+            if (ticket) {
+                ticket.status = 'open';
+                ticket.resolved = null;
+                saveTickets();
+                renderTickets();
+                updateAnalytics();
+                hideTicketModal();
+            }
+        }
+       
+        function deleteTicket(ticketId) {
+            tickets = tickets.filter(t => t.id !== ticketId);
+            saveTickets();
+            renderTickets();
+            updateAnalytics();
+            hideTicketModal();
+        }
+       
+        function createNewTicket() {
+            const title = document.getElementById('ticketTitle').value;
+            const description = document.getElementById('ticketDescription').value;
+            const priority = document.getElementById('ticketPriority').value;
+           
+            if (!title || !description) {
+                alert('Please fill in all required fields');
+                return;
+            }
+           
+            const newTicket = {
+                id: generateTicketId(),
+                title: title,
+                description: description,
+                priority: priority,
+                status: 'open',
+                created: new Date().toISOString(),
+                dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // Default due in 7 days
+                assignedTo: null
+            };
+           
+            tickets.push(newTicket);
+            saveTickets();
+            renderTickets();
+            hideTicketModal();
+        }
+       
         // Accessibility Functions
         function initializeAccessibility() {
             const panel = document.getElementById('accessibilityPanel');
@@ -896,18 +1507,21 @@
                 document.body.className = 'text-white min-h-screen';
             });
         }
-
+       
         // Initialize data attributes for live updates
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize tickets
+            initializeTickets();
+           
             // Add data attributes to dynamic elements
             const sensorElements = document.querySelectorAll('.sensor-value');
             sensorElements.forEach((element, index) => {
                 element.setAttribute('data-sensor', `NDIR-00${index + 1}`);
             });
-
+           
             // Start live data simulation
             setInterval(updateLiveData, 3000);
-
+           
             // Add smooth scrolling for navigation
             document.querySelectorAll('.nav-link').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
@@ -930,6 +1544,154 @@
                         });
                     }
                 });
+            });
+           
+            // Technology page functionality
+            document.getElementById('viewTechnology').addEventListener('click', showTechnologyPage);
+            document.getElementById('closeTechnology').addEventListener('click', hideTechnologyPage);
+           
+            // Ticket system functionality - event delegation for dynamically created buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.ticket-action')) {
+                    const button = e.target.closest('.ticket-action');
+                    const ticketId = button.getAttribute('data-ticket');
+                    const action = button.getAttribute('data-action');
+                    handleTicketAction(ticketId, action);
+                }
+               
+                if (e.target.closest('.delete-btn')) {
+                    const button = e.target.closest('.delete-btn');
+                    const ticketId = button.getAttribute('data-ticket');
+                    handleTicketAction(ticketId, 'delete');
+                }
+            });
+           
+            document.getElementById('createTicket').addEventListener('click', function() {
+                showTicketModal('Create New Ticket', `
+                    <div class="space-y-4">
+                        <div>
+                            <label for="ticketTitle" class="block text-sm font-medium mb-2">Title *</label>
+                            <input type="text" id="ticketTitle" class="w-full bg-gray-700 text-white rounded p-2" placeholder="Enter ticket title">
+                        </div>
+                        <div>
+                            <label for="ticketDescription" class="block text-sm font-medium mb-2">Description *</label>
+                            <textarea id="ticketDescription" class="w-full bg-gray-700 text-white rounded p-2" rows="4" placeholder="Describe the issue or request..."></textarea>
+                        </div>
+                        <div>
+                            <label for="ticketPriority" class="block text-sm font-medium mb-2">Priority</label>
+                            <select id="ticketPriority" class="w-full bg-gray-700 text-white rounded p-2">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="ticketDueDate" class="block text-sm font-medium mb-2">Due Date</label>
+                            <input type="date" id="ticketDueDate" class="w-full bg-gray-700 text-white rounded p-2" value="${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}">
+                        </div>
+                        <div class="flex space-x-2 mt-4">
+                            <button class="bg-sky-blue hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors" onclick="createNewTicket()">
+                                Create Ticket
+                            </button>
+                            <button class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded transition-colors" onclick="hideTicketModal()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                `);
+            });
+           
+            document.getElementById('viewAllTickets').addEventListener('click', function() {
+                showTicketModal('All Support Tickets', `
+                    <div class="space-y-4">
+                        <p>This would display a comprehensive list of all support tickets with filtering and search capabilities in a full implementation.</p>
+                        <div class="flex space-x-2 mt-4">
+                            <button class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded transition-colors" onclick="hideTicketModal()">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                `);
+            });
+           
+            document.getElementById('analyticsReport').addEventListener('click', function() {
+                const openCount = tickets.filter(t => t.status === 'open').length;
+                const inProgressCount = tickets.filter(t => t.status === 'in-progress').length;
+                const resolvedCount = tickets.filter(t => t.status === 'resolved').length;
+               
+                // Calculate priority distribution
+                const priorityCounts = {
+                    critical: tickets.filter(t => t.priority === 'critical').length,
+                    high: tickets.filter(t => t.priority === 'high').length,
+                    medium: tickets.filter(t => t.priority === 'medium').length,
+                    low: tickets.filter(t => t.priority === 'low').length
+                };
+               
+                showTicketModal('Ticket Analytics Report', `
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gray-800/50 p-4 rounded">
+                                <p class="text-gray-400 text-sm">Open Tickets</p>
+                                <p class="text-2xl font-bold text-sky-blue">${openCount}</p>
+                            </div>
+                            <div class="bg-gray-800/50 p-4 rounded">
+                                <p class="text-gray-400 text-sm">In Progress</p>
+                                <p class="text-2xl font-bold text-eco-green">${inProgressCount}</p>
+                            </div>
+                            <div class="bg-gray-800/50 p-4 rounded">
+                                <p class="text-gray-400 text-sm">Resolved</p>
+                                <p class="text-2xl font-bold text-sun-orange">${resolvedCount}</p>
+                            </div>
+                            <div class="bg-gray-800/50 p-4 rounded">
+                                <p class="text-gray-400 text-sm">Total Tickets</p>
+                                <p class="text-2xl font-bold text-purple-400">${tickets.length}</p>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-gray-400 text-sm mb-2">Priority Distribution</p>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span>Critical</span>
+                                    <span class="text-red-400">${priorityCounts.critical}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>High</span>
+                                    <span class="text-orange-400">${priorityCounts.high}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Medium</span>
+                                    <span class="text-yellow-400">${priorityCounts.medium}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Low</span>
+                                    <span class="text-green-400">${priorityCounts.low}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2 mt-4">
+                            <button class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded transition-colors" onclick="hideTicketModal()">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                `);
+            });
+           
+            document.getElementById('closeModal').addEventListener('click', hideTicketModal);
+           
+            // Close modal when clicking outside
+            document.getElementById('ticketModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    hideTicketModal();
+                }
+            });
+           
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !document.getElementById('ticketModal').classList.contains('hidden')) {
+                    hideTicketModal();
+                }
             });
            
             // Initialize accessibility features
